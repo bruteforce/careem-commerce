@@ -2,10 +2,7 @@ package com.careem.model;
 
 import java.util.Map;
 
-import com.careem.exception.APIConnectionException;
-import com.careem.exception.APIException;
-import com.careem.exception.AuthenticationException;
-import com.careem.exception.InvalidRequestException;
+import com.careem.exception.*;
 import com.careem.net.APIResource;
 
 public class CarrierAccount extends APIResource {

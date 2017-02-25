@@ -1,4 +1,4 @@
-Objects in the System
+Objects of the system
 
 1. Address
     {

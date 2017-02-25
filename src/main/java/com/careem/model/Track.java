@@ -14,11 +14,7 @@ import com.careem.exception.AuthenticationException;
 import com.careem.exception.InvalidRequestException;
 import com.careem.net.APIResource;
 
-/**
- * Use this class to track shipments. Represents object defined in
- * https://api.goshippo.com/tracks endpoint. The endpoint's documentation can be
- * found in https://goshippo.com/docs/reference#tracks
- */
+
 public final class Track extends APIResource {
 
 	private String carrier;
@@ -166,7 +162,7 @@ public final class Track extends APIResource {
 			return String.format("%s/%s/%s", classURL(Track.class), urlEncode(carrier), urlEncode(trackingNumber));
 		} catch (UnsupportedEncodingException e) {
 			throw new InvalidRequestException("Unable to encode parameters to " + CHARSET
-					+ ". Please contact support@goshippo.com for assistance.", null, e);
+					+ ". Please contact support@gocareem.com for assistance.", null, e);
 		}
 	}
 

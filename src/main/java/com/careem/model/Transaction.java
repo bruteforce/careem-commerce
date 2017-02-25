@@ -69,7 +69,7 @@ public class Transaction extends APIResource {
 				|| objectStatus.equals("WAITING")) {
 			if (System.currentTimeMillis() - startTime > Constants.TRANSACTION_REQ_TIMEOUT) {
 				throw new RequestTimeoutException(
-						"A timeout has occured while waiting for your label to generate. Try retreiving the Transaction object again and check if objectStatus is updated. If this issue persists, please contact support@goshippo.com");
+						"A timeout has occured while waiting for your label to generate.");
 			}
 			transaction = retrieve(object_id);
 			objectStatus = (String) transaction.objectStatus;

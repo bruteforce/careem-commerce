@@ -78,7 +78,7 @@ public class Shipment extends APIResource {
 				|| objectStatus.equals("WAITING")) {
 			if (System.currentTimeMillis() - startTime > Constants.RATES_REQ_TIMEOUT) {
 				throw new RequestTimeoutException(
-						"A timeout has occured while waiting for your rates to generate. Try retreiving the Shipment object again and check if objectStatus is updated. If this issue persists, please contact support@goshippo.com");
+						"A timeout has occured while waiting for your rates to generate.");
 			}
 			shipment = retrieve(object_id);
 			objectStatus = (String) shipment.objectStatus;

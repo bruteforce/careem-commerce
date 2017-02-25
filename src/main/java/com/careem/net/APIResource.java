@@ -39,9 +39,8 @@ public abstract class APIResource extends ShippoObject {
 		String className = clazz.getSimpleName().toLowerCase()
 				.replace("$", " ");
 
-		// Special case class names
 		if (className.equals("address")) {
-			return "addresse";
+			return "address";
 		} else if (className.equals("customsitem")) {
 			return "customs/item";
 		} else if (className.equals("customsdeclaration")) {
@@ -72,7 +71,7 @@ public abstract class APIResource extends ShippoObject {
 		} catch (UnsupportedEncodingException e) {
 			throw new InvalidRequestException("Unable to encode parameters to "
 					+ CHARSET
-					+ ". Please contact support@goshippo.com for assistance.",
+					+ ". Please contact support@gocareem.com for assistance.",
 					null, e);
 		}
 	}
@@ -81,12 +80,8 @@ public abstract class APIResource extends ShippoObject {
 
 	private static final String DNS_CACHE_TTL_PROPERTY_NAME = "networkaddress.cache.ttl";
 
-	/*
-	 * Set this property to override your environment's default
-	 * URLStreamHandler; Settings the property should not be needed in most
-	 * environments.
-	 */
-	private static final String CUSTOM_URL_STREAM_HANDLER_PROPERTY_NAME = "com.shippo.net.customURLStreamHandler";
+
+	private static final String CUSTOM_URL_STREAM_HANDLER_PROPERTY_NAME = "com.careem.net.customURLStreamHandler";
 
 	protected enum RequestMethod {
 		GET, POST, PUT
@@ -94,9 +89,7 @@ public abstract class APIResource extends ShippoObject {
 
 	protected static String urlEncode(String str)
 			throws UnsupportedEncodingException {
-		// Preserve original behavior that passing null for an object id will
-		// lead
-		// to us actually making a request to /v1/foo/null
+
 		if (str == null) {
 			return null;
 		} else {
@@ -113,26 +106,27 @@ public abstract class APIResource extends ShippoObject {
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Accept-Charset", CHARSET);
 		headers.put("User-Agent",
-				String.format("Shippo/v1 JavaBindings/%s", Constants.VERSION));
+				String.format("Careem/v1 JavaBindings/%s", Constants.VERSION));
 
 		if (apiKey == null) {
 			apiKey = Constants.apiKey;
 		}
 
-		headers.put("Authorization", String.format("ShippoToken %s", apiKey));
+		headers.put("Authorization", String.format("CareemToken %s", apiKey));
 		headers.put("Accept", "application/json");
 
 		// debug headers
 		String[] propertyNames = { "os.name", "os.version", "os.arch",
 				"java.version", "java.vendor", "java.vm.version",
 				"java.vm.vendor" };
+
 		Map<String, String> propertyMap = new HashMap<String, String>();
 		for (String propertyName : propertyNames) {
 			propertyMap.put(propertyName, System.getProperty(propertyName));
 		}
 		headers.put("User-Agent", GSON.toJson(propertyMap));
 		if (Constants.apiVersion != null) {
-		    headers.put("Shippo-API-Version", Constants.apiVersion);
+		    headers.put("Careem-API-Version", Constants.apiVersion);
 		}
 		return headers;
 	}
@@ -171,35 +165,35 @@ public abstract class APIResource extends ShippoObject {
 	private static void throwInvalidCertificateException()
 			throws APIConnectionException {
 		throw new APIConnectionException(
-				"Invalid server certificate. You tried to connect to a server that has a revoked SSL certificate, which means we cannot securely send data to that server. Please email support@goshippo.com if you need help connecting to the correct API server.");
+				"Invalid server certificate. You tried to connect to a server that has a revoked SSL certificate, which means we cannot securely send data to that server. Please email support@gocareem.com if you need help connecting to the correct API server.");
 	}
 
 	private static void checkSSLCert(java.net.HttpURLConnection hconn)
 			throws IOException, APIConnectionException {
 		 if (!Constants.getVerifySSL() &&
-		 !hconn.getURL().getHost().equals("api.shippo.com")) {
+		 !hconn.getURL().getHost().equals("api.careem.com")) {
 		 return;
 		 }
-		
+
 		 javax.net.ssl.HttpsURLConnection conn =
 		 (javax.net.ssl.HttpsURLConnection) hconn;
 		 conn.connect();
-		
+
 		 Certificate[] certs = conn.getServerCertificates();
-		
+
 		 try {
 		 MessageDigest md = MessageDigest.getInstance("SHA-1");
-		
+
 		 byte[] der = certs[0].getEncoded();
 		 md.update(der);
 		 byte[] digest = md.digest();
-		
+
 		 byte[] revokedCertDigest = {};
-		
+
 		 if (Arrays.equals(digest, revokedCertDigest)) {
 		 throwInvalidCertificateException();
 		 }
-		
+
 		 } catch (NoSuchAlgorithmException e) {
 		 throw new RuntimeException(e);
 		 } catch (CertificateEncodingException e) {
@@ -318,25 +312,20 @@ public abstract class APIResource extends ShippoObject {
 		return flatParams;
 	}
 
-	// represents Errors returned as JSON
-	@SuppressWarnings("unused")
+
 	private static class ErrorContainer {
 		private APIResource.Error error;
 	}
 
 	private static class Error {
-		@SuppressWarnings("unused")
 		String type;
 		String message;
-		@SuppressWarnings("unused")
 		String code;
 		String param;
 	}
 
-	@SuppressWarnings("resource")
 	private static String getResponseBody(InputStream responseStream)
 			throws IOException {
-		// \A is the beginning of the stream boundary
 		String rBody = new Scanner(responseStream, CHARSET).useDelimiter("\\A")
 				.next(); //
 
@@ -349,7 +338,6 @@ public abstract class APIResource extends ShippoObject {
 			String apiKey) throws APIConnectionException {
 		java.net.HttpURLConnection conn = null;
 
-		// Print Information about the Connection
 		if (Constants.isDEBUG()) {
 			System.out.println("URL: " + url);
 			System.out.println("Query: " + query);
@@ -365,13 +353,10 @@ public abstract class APIResource extends ShippoObject {
 			}else{
 				throw new APIConnectionException(
 						String.format(
-								"Unrecognized HTTP method %s. "
-										+ "This indicates a bug in the Shippo bindings. Please contact "
-										+ "support@goshippo.com for assistance.",
+								"Unrecognized HTTP method",
 								method));
 			}
 
-			// Trigger the Request
 			int rCode = conn.getResponseCode();
 
 			String rBody;
@@ -404,7 +389,6 @@ public abstract class APIResource extends ShippoObject {
 		try {
 			originalDNSCacheTTL = java.security.Security
 					.getProperty(DNS_CACHE_TTL_PROPERTY_NAME);
-			// disable DNS cache
 			java.security.Security
 					.setProperty(DNS_CACHE_TTL_PROPERTY_NAME, "0");
 		} catch (SecurityException se) {
@@ -416,8 +400,7 @@ public abstract class APIResource extends ShippoObject {
 		} finally {
 			if (allowedToSetTTL) {
 				if (originalDNSCacheTTL == null) {
-					// value unspecified by implementation
-					// DNS_CACHE_TTL_PROPERTY_NAME of -1 = cache forever
+
 					java.security.Security.setProperty(
 							DNS_CACHE_TTL_PROPERTY_NAME, "-1");
 				} else {
@@ -434,10 +417,7 @@ public abstract class APIResource extends ShippoObject {
 			InvalidRequestException, APIConnectionException, APIException {
 		if ((Constants.apiKey == null || Constants.apiKey.length() == 0)
 				&& (apiKey == null || apiKey.length() == 0)) {
-			throw new AuthenticationException(
-					"No API key provided. (HINT: set your API key using 'Shippo.apiKey = <API-KEY>'. "
-							+ "You can generate API keys from the Shippo web interface. "
-							+ "See https://goshippo.com/docs for details or email support@goshippo.com if you have questions.");
+			throw new AuthenticationException("");
 		}
 
 		if (apiKey == null) {
@@ -448,8 +428,7 @@ public abstract class APIResource extends ShippoObject {
 		try {
 			query = createQuery(params, method);
 		} catch (UnsupportedEncodingException e) {
-			 throw new InvalidRequestException("Unable to encode parameters to " + CHARSET
-	                    + ". Please contact support@shippo.com for assistance.", null, e);
+			 throw new InvalidRequestException("Unable to encode parameters to");
 		}
 		ShippoResponse response = makeURLConnectionRequest(method, url, query,
 				apiKey);
@@ -466,10 +445,7 @@ public abstract class APIResource extends ShippoObject {
 	private static void handleAPIError(String rBody, int rCode)
 			throws InvalidRequestException, AuthenticationException,
 			APIException {
-
-		// Current API does not support JSON Based error response bodies
-		// APIResource.Error error = GSON.fromJson(rBody,
-		// APIResource.ErrorContainer.class).error;
+		
 		APIResource.Error error = new Error();
 		error.message = rBody;
 		error.code = rCode + "";

@@ -18,26 +18,26 @@ public class Example {
 
 		Map<String, Object> toAddressMap = new HashMap<String, Object>();
 		toAddressMap.put("object_purpose", "PURCHASE");
-		toAddressMap.put("name", "Mr Hippo");
-		toAddressMap.put("company", "Shippo");
-		toAddressMap.put("street1", "215 Clayton St.");
-		toAddressMap.put("city", "San Francisco");
-		toAddressMap.put("state", "CA");
-		toAddressMap.put("zip", "94117");
-		toAddressMap.put("country", "US");
-		toAddressMap.put("phone", "+1 555 341 9393");
-		toAddressMap.put("email", "mrhippo@goshipppo.com");
+		toAddressMap.put("name", "Mr A");
+		toAddressMap.put("company", "Kareem");
+		toAddressMap.put("street1", "361, Sunehri Bagh");
+		toAddressMap.put("city", "Rohini");
+		toAddressMap.put("state", "Delhi");
+		toAddressMap.put("zip", "110085");
+		toAddressMap.put("country", "India");
+		toAddressMap.put("phone", "8884638679");
+		toAddressMap.put("email", "mrhippo@gocareem.com");
 
 		Map<String, Object> fromAddressMap = new HashMap<String, Object>();
 		fromAddressMap.put("object_purpose", "PURCHASE");
-		fromAddressMap.put("name", "Ms Hippo");
-		fromAddressMap.put("company", "San Diego Zoo");
-		fromAddressMap.put("street1", "2920 Zoo Drive");
-		fromAddressMap.put("city", "San Diego");
-		fromAddressMap.put("state", "CA");
-		fromAddressMap.put("zip", "92101");
+		fromAddressMap.put("name", "Ms B");
+		fromAddressMap.put("company", "");
+		fromAddressMap.put("street1", "Koramangla");
+		fromAddressMap.put("city", "Bangalore");
+		fromAddressMap.put("state", "Karnatka");
+		fromAddressMap.put("zip", "110085");
 		fromAddressMap.put("country", "US");
-		fromAddressMap.put("email", "mshippo@goshipppo.com");
+		fromAddressMap.put("email", "careem@gocareem.com");
 		fromAddressMap.put("phone", "+1 619 231 1515");
 		fromAddressMap.put("metadata", "Customer ID 123456");
 
