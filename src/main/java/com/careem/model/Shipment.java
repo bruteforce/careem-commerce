@@ -3,13 +3,8 @@ package com.careem.model;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.careem.Shippo;
-import com.careem.exception.APIConnectionException;
-import com.careem.exception.APIException;
-import com.careem.exception.AuthenticationException;
-import com.careem.exception.InvalidRequestException;
-import com.careem.exception.RequestTimeoutException;
+import com.careem.Constants;
+import com.careem.exception.*;
 import com.careem.net.APIResource;
 
 public class Shipment extends APIResource {
@@ -81,7 +76,7 @@ public class Shipment extends APIResource {
 
 		while (objectStatus.equals("QUEUED")
 				|| objectStatus.equals("WAITING")) {
-			if (System.currentTimeMillis() - startTime > Shippo.RATES_REQ_TIMEOUT) {
+			if (System.currentTimeMillis() - startTime > Constants.RATES_REQ_TIMEOUT) {
 				throw new RequestTimeoutException(
 						"A timeout has occured while waiting for your rates to generate. Try retreiving the Shipment object again and check if objectStatus is updated. If this issue persists, please contact support@goshippo.com");
 			}

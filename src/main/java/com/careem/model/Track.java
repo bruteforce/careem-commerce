@@ -159,10 +159,7 @@ public final class Track extends APIResource {
 		return trackingHistory;
 	}
 
-	/**
-	 * Return URL that maps given tracking number on given carrier as
-	 * https://api.goshippo.com/tracks/<carrier>/<number>
-	 */
+
 	private static String trackingNumberURL(String carrier, String trackingNumber)
 			throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException {
 		try {
@@ -173,37 +170,13 @@ public final class Track extends APIResource {
 		}
 	}
 
-	/**
-	 * Get tracking information of any package from given carrier. This
-	 * corresponds to https://api.goshippo.com/tracks/<carrier>/<tracking
-	 * number> API defined in
-	 * https://goshippo.com/docs/reference#tracks-retrieve
-	 *
-	 * @param carrier
-	 *            Name of the carrier (like "usps") tracking the package
-	 * @param trackingNumber
-	 *            Tracking number provided by the carrier for a package
-	 * @return Track object containing tracking info
-	 */
+
 	public static Track getTrackingInfo(String carrier, String trackingNumber, String apiKey)
 			throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException {
 		return request(RequestMethod.GET, trackingNumberURL(carrier, trackingNumber), null, Track.class, apiKey);
 	}
 
-	/**
-	 * Register webhook for tracking shipment of a pacakge. This corresponds to
-	 * API defined in https://goshippo.com/docs/reference#tracks-create. Please
-	 * note that the webhook where information will be posted need to be already
-	 * provided in https://app.goshippo.com
-	 *
-	 * @param carrier
-	 *            Name of the carrier (like "usps") tracking the packing
-	 * @param trackingNumber
-	 *            Tracking number provided by the carrier for a package
-	 * @param metadata
-	 *            Generic information related to this tracking
-	 * @return Track object containing tracking info
-	 */
+
 	public static Track registerTrackingWebhook(String carrier, String trackingNumber, String metadata, String apiKey)
 			throws AuthenticationException, InvalidRequestException, APIConnectionException, APIException {
 		Map<String, Object> params = new HashMap<String, Object>();

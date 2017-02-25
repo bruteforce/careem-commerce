@@ -1,6 +1,6 @@
 package com.careem.exception;
 
-public class RequestTimeoutException extends ShippoException {
+public class RequestTimeoutException extends CommerceException {
 
     private static final long serialVersionUID = 1L;
 

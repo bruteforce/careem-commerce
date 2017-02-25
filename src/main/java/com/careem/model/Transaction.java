@@ -2,7 +2,7 @@ package com.careem.model;
 
 import java.util.Map;
 
-import com.careem.Shippo;
+import com.careem.Constants;
 import com.careem.exception.APIConnectionException;
 import com.careem.exception.APIException;
 import com.careem.exception.AuthenticationException;
@@ -67,7 +67,7 @@ public class Transaction extends APIResource {
 
 		while (objectStatus.equals("QUEUED")
 				|| objectStatus.equals("WAITING")) {
-			if (System.currentTimeMillis() - startTime > Shippo.TRANSACTION_REQ_TIMEOUT) {
+			if (System.currentTimeMillis() - startTime > Constants.TRANSACTION_REQ_TIMEOUT) {
 				throw new RequestTimeoutException(
 						"A timeout has occured while waiting for your label to generate. Try retreiving the Transaction object again and check if objectStatus is updated. If this issue persists, please contact support@goshippo.com");
 			}

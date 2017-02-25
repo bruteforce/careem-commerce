@@ -22,11 +22,8 @@ import java.util.Scanner;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.careem.Shippo;
-import com.careem.exception.APIConnectionException;
-import com.careem.exception.APIException;
-import com.careem.exception.AuthenticationException;
-import com.careem.exception.InvalidRequestException;
+import com.careem.Constants;
+import com.careem.exception.*;
 import com.careem.model.ShippoObject;
 import com.careem.model.ShippoRawJsonObject;
 import com.careem.model.ShippoRawJsonObjectDeserializer;
@@ -57,7 +54,7 @@ public abstract class APIResource extends ShippoObject {
 	}
 
 	protected static String singleClassURL(Class<?> clazz) {
-		return String.format("%s/v1/%s", Shippo.getApiBase(), className(clazz));
+		return String.format("%s/v1/%s", Constants.getApiBase(), className(clazz));
 	}
 
 	protected static String classURL(Class<?> clazz) {
@@ -116,10 +113,10 @@ public abstract class APIResource extends ShippoObject {
 		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Accept-Charset", CHARSET);
 		headers.put("User-Agent",
-				String.format("Shippo/v1 JavaBindings/%s", Shippo.VERSION));
+				String.format("Shippo/v1 JavaBindings/%s", Constants.VERSION));
 
 		if (apiKey == null) {
-			apiKey = Shippo.apiKey;
+			apiKey = Constants.apiKey;
 		}
 
 		headers.put("Authorization", String.format("ShippoToken %s", apiKey));
@@ -133,23 +130,19 @@ public abstract class APIResource extends ShippoObject {
 		for (String propertyName : propertyNames) {
 			propertyMap.put(propertyName, System.getProperty(propertyName));
 		}
-		// propertyMap.put("bindings.version", Shippo.VERSION);
-		// propertyMap.put("lang", "Java");
-		// propertyMap.put("publisher", "Shippo");
 		headers.put("User-Agent", GSON.toJson(propertyMap));
-		if (Shippo.apiVersion != null) {
-		    headers.put("Shippo-API-Version", Shippo.apiVersion);
+		if (Constants.apiVersion != null) {
+		    headers.put("Shippo-API-Version", Constants.apiVersion);
 		}
 		return headers;
 	}
 
 	private static java.net.HttpURLConnection createShippoConnection(
 			String url, String apiKey) throws IOException {
-		URL shippoURL;
+		URL shippoURL = null;
 		String customURLStreamHandlerClassName = System.getProperty(
 				CUSTOM_URL_STREAM_HANDLER_PROPERTY_NAME, null);
 		if (customURLStreamHandlerClassName != null) {
-			// instantiate the custom handler provided
 			try {
 				@SuppressWarnings("unchecked")
 				Class<URLStreamHandler> clazz = (Class<URLStreamHandler>) Class
@@ -158,20 +151,7 @@ public abstract class APIResource extends ShippoObject {
 						.getConstructor();
 				URLStreamHandler customHandler = constructor.newInstance();
 				shippoURL = new URL(null, url, customHandler);
-			} catch (ClassNotFoundException e) {
-				throw new IOException(e);
-			} catch (SecurityException e) {
-				throw new IOException(e);
-			} catch (NoSuchMethodException e) {
-				throw new IOException(e);
-			} catch (IllegalArgumentException e) {
-				throw new IOException(e);
-			} catch (InstantiationException e) {
-				throw new IOException(e);
-			} catch (IllegalAccessException e) {
-				throw new IOException(e);
-			} catch (InvocationTargetException e) {
-				throw new IOException(e);
+			} catch (Exception e) {
 			}
 		} else {
 			shippoURL = new URL(url);
@@ -196,7 +176,7 @@ public abstract class APIResource extends ShippoObject {
 
 	private static void checkSSLCert(java.net.HttpURLConnection hconn)
 			throws IOException, APIConnectionException {
-		 if (!Shippo.getVerifySSL() &&
+		 if (!Constants.getVerifySSL() &&
 		 !hconn.getURL().getHost().equals("api.shippo.com")) {
 		 return;
 		 }
@@ -228,11 +208,9 @@ public abstract class APIResource extends ShippoObject {
 	}
 
 	private static String formatURL(String url, String query) {
-		if (query == null || query.isEmpty()) {
+		if (query == null) {
 			return url;
 		} else {
-			// In some cases, URL can already contain a question mark (eg,
-			// upcoming invoice lines)
 			String separator = url.contains("?") ? "&" : "?";
 			return String.format("%s%s%s", url, separator, query);
 		}
@@ -241,7 +219,7 @@ public abstract class APIResource extends ShippoObject {
 	private static java.net.HttpURLConnection createGetConnection(String url,
 			String query, String apiKey) throws IOException,
 			APIConnectionException {
-		if (Shippo.isDEBUG()) {
+		if (Constants.isDEBUG()) {
 			System.out.println("GET URL: " + url);
 		}
 		String getURL = formatURL(url, query);
@@ -256,7 +234,7 @@ public abstract class APIResource extends ShippoObject {
 	private static java.net.HttpURLConnection createPostPutConnection(String url,
 			String query, RequestMethod method, String apiKey) throws IOException,
 			APIConnectionException {
-		if (Shippo.isDEBUG()) {
+		if (Constants.isDEBUG()) {
 			System.out.println("POST URL: " + url);
 		}
 
@@ -283,7 +261,7 @@ public abstract class APIResource extends ShippoObject {
 	private static java.net.HttpURLConnection createPutConnection(String url,
 			String query, String apiKey) throws IOException,
 			APIConnectionException {
-		if (Shippo.isDEBUG()) {
+		if (Constants.isDEBUG()) {
 			System.out.println("PUT URL: " + url);
 		}
 
@@ -372,7 +350,7 @@ public abstract class APIResource extends ShippoObject {
 		java.net.HttpURLConnection conn = null;
 
 		// Print Information about the Connection
-		if (Shippo.isDEBUG()) {
+		if (Constants.isDEBUG()) {
 			System.out.println("URL: " + url);
 			System.out.println("Query: " + query);
 			System.out.println("API Key: " + apiKey);
@@ -406,28 +384,10 @@ public abstract class APIResource extends ShippoObject {
 			}
 			headers = conn.getHeaderFields();
 
-			// /////////////////////////////////////////////////////////////////
-			// PRINT RESULTS
-			// /////////////////////////////////////////////////////////////////
-			if (Shippo.isDEBUG()) {
-				System.out.println("Headers: ");
-				for (Map.Entry<String, List<String>> entry : headers.entrySet()) {
-					System.out.println(entry.getKey() + " : "
-							+ entry.getValue());
-				}
-				System.out.println("Response Code: " + rCode);
-				System.out.println("Reponse Body: " + rBody);
-			}
-
 			return new ShippoResponse(rCode, rBody, headers);
 		} catch (IOException e) {
 			throw new APIConnectionException(
-					String.format(
-							"IOException during API request to Shippo (%s): %s "
-									+ "Please check your internet connection and try again. If this problem persists,"
-									+ "you should check Shippo's service status at http://status.goshippo.com/,"
-									+ " or let us know at support@goshippo.com.",
-							Shippo.getApiBase(), e.getMessage()), e);
+					String.format(""), e);
 		} finally {
 			if (conn != null) {
 				conn.disconnect();
@@ -472,7 +432,7 @@ public abstract class APIResource extends ShippoObject {
 			String url, Map<String, Object> params, Class<T> clazz,
 			String apiKey) throws AuthenticationException,
 			InvalidRequestException, APIConnectionException, APIException {
-		if ((Shippo.apiKey == null || Shippo.apiKey.length() == 0)
+		if ((Constants.apiKey == null || Constants.apiKey.length() == 0)
 				&& (apiKey == null || apiKey.length() == 0)) {
 			throw new AuthenticationException(
 					"No API key provided. (HINT: set your API key using 'Shippo.apiKey = <API-KEY>'. "
@@ -481,7 +441,7 @@ public abstract class APIResource extends ShippoObject {
 		}
 
 		if (apiKey == null) {
-			apiKey = Shippo.apiKey;
+			apiKey = Constants.apiKey;
 		}
 
 		String query;

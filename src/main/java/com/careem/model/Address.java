@@ -8,7 +8,6 @@ import com.careem.exception.AuthenticationException;
 import com.careem.exception.InvalidRequestException;
 import com.careem.net.APIResource;
 
-// Class is affected by URL name inconsistencies, see APIResource.java (private static String className(Class<?> clazz))
 public class Address extends APIResource {
 
 	String objectState;

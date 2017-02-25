@@ -1,112 +1,95 @@
-[![Build Status](https://travis-ci.org/goshippo/shippo-java-client.svg?branch=master)](https://travis-ci.org/goshippo/shippo-java-client)
+Objects in the System
 
-#Shippo Java API wrapper
-
-Shippo is a shipping API that connects you with [multiple shipping carriers](https://goshippo.com/carriers/) (such as USPS, UPS, DHL, Canada Post, Australia Post, UberRUSH and many others) through one interface.
-
-Print a shipping label in 10 mins using our default USPS and DHL Express accounts. No need to register for a carrier account to get started.
-
-Requirements
-============
-
-* Java 1.5 and later
-
-* [Shippo account](https://goshippo.com/) - free to sign up, free to use the API. Only pay to print a live label, test labels are free. 
-
-Installation
-============
-
-### Maven users
-
-Add this dependency to your project's POM:
-
-    <dependency>
-        <groupId>com.goshippo</groupId>
-        <artifactId>shippo-java-client</artifactId>
-        <version>1.2.0</version>
-    </dependency>
-
-
-### Others
-
-You'll need to manually install the following JARs:
-
-* The latest Shippo JAR from <https://github.com/goshippo/shippo-java-client/releases>
-* [Google Gson](http://code.google.com/p/google-gson/) from <http://google-gson.googlecode.com/files/google-gson-2.2.4-release.zip>.
-
-### Developing with Eclipse
-
-You can also load the source into Eclipse, simply clone this repository. Then open up Eclipse (the latest eclipse comes with maven).
-Within eclipse, File --> Import
-In the dialog window that appears, chose "Existing Maven Projects", from there on, follow the wizard, and you will have imported the project.
-You can then run Example.java, or any of the individual JUnit test cases. 
-
-
-Usage
-=====
-
-Check out the file Example.java for more examples, alternatively you can look through all of the test classes for each particular model for examples.
-For useful debugging information including headers, server raw response etc, set Shippo.setDEBUG(true);
-
-Below is a brief code example:
-
-    /* Code Example */
-    public static void main(String[] args) {
-    
-        Shippo.apiKey = "<Your Shippo authToken>";
-        
-        Map<String, Object> addressMap = new HashMap<String, Object>();
-		addressMap.put("object_purpose", "PURCHASE");
-		addressMap.put("name", "Shippo Itle");
-		addressMap.put("company", "Shippo");
-		addressMap.put("street1", "215 Clayton St.");
-		addressMap.put("city", "San Francisco");
-		addressMap.put("state", "CA");
-		addressMap.put("zip", "94117");
-		addressMap.put("country", "US");
-		addressMap.put("phone", "+1 555 341 9393");
-		addressMap.put("email", "laura@goshipppo.com");
-
-        try {
-            Address address = Address.create(addressMap);
-            System.out.println(address.toString());
-            System.out.println("Zip code: " + address.getZip());
-        } catch (ShippoException e) {
-            e.printStackTrace();
-        }
+1. Address
+    {
+        "object_state": "VALID",
+        "object_purpose": "PURCHASE",
+        "object_source": "FULLY_ENTERED",
+        "object_created": "2013-12-11T19:38:09.729Z",
+        "object_updated": "2013-12-11T19:38:09.729Z",
+        "object_id": "fcd9c72b564d4bfa8c03299ed6545132",
+        "object_owner": "careemtle@gocareem.com",
+        "name": "Shawn Ippotle",
+        "company": "careem",
+        "street1": "215 Clayton St.",
+        "street2": "",
+        "city": "San Francisco",
+        "state": "CA",
+        "zip": "94117",
+        "country": "US",
+        "phone": "+1 555 341 9393",
+        "email": "careemtle@gocareem.com",
+        "is_residential":true,
+        "metadata": "Customer ID 123456",
+        "test": true,
+        "messages": []
     }
-    
+    Address objects are used for creating Shipments, obtaining Rates and printing Labels
+    End Points:
+    Create a new address
+    POST /address/
+
+    Retrieve an existing address by object id.
+    GET /address/<address_object_id>
+
+    Validate an existing address by object id.
+    GET /address/<address_object_id>/validate
+
+    List all addresses
+    GET /addresses/
 
 
-Testing
-=======
+2. Parcel
+    {
+       "object_state": "VALID",
+       "object_created": "2013-12-11T19:38:09.729Z",
+       "object_updated": "2013-12-11T19:38:09.729Z",
+       "object_id": "fcd9c72b564d4bfa8c03299ed6545132",
+       "object_owner": "careemtle@gocareem.com",
+       "template": null,
+       "length": "20",
+       "width": "15",
+       "height": "12",
+       "distance_unit": "in",
+       "weight": "5",
+       "mass_unit": "lb",
+       "metadata": "Customer ID 123456",
+       "extra": {},
+       "test": true
+    }
+   Parcel objects are used for creating Shipments, obtaining Rates and printing Labels.
+   Parcels are created with their basic dimensions and their weight.
 
-You must have Maven installed. To run the tests, simply run `mvn test`. You can run particular tests by passing `-D test=Class#method` -- for example, `-D test=ShippoTest#testAddressCreate`.
+   End Points:
 
-You can also run the tests in eclipse.
+   Create a new parcel
+   POST /parcels/
+   Retrieve an existing parcel by object id.
+   GET /parcels/<PARCEL OBJECT ID>
+   List all parcels
+   GET /parcels/
 
-## Documentation
 
-Please see [https://goshippo.com/docs](https://goshippo.com/docs) for up-to-date documentation.
+3. Shipment
+   A shipment is made up of "to" and "from" addresses and the parcel to be shipped.
+   From shipment object we can retrieve shipping rates and purchase a shipping label.
 
-## About Shippo
 
-Connect with multiple different carriers, get discounted shipping labels, track parcels, and much more with just one integration. You can use your own carrier accounts or take advantage of our discounted rates with the USPS and DHL Express. Using Shippo makes it easy to deal with multiple carrier integrations, rate shopping, tracking and other parts of the shipping workflow. We provide the API and dashboard for all your shipping needs.
+4. Rate
+   A rate is an available service of a shipping provider for a given shipment,
+   including the price and transit time.
 
-## Supported Features
+5. Transaction (shipping labels)
+   A transaction is the purchase of a shipping label from a shipping provider for a specific service.
 
-The Shippo API provides in depth support of carrier and shipping functionalities. Here are just some of the features we support through the API:
+6. Customs Items
+   Customs items are distinct items in your shipment parcel.
 
-* Shipping rates & labels
-* Tracking for any shipment with just the tracking number
-* Batch label generation
-* Multi-piece shipments
-* Manifests and SCAN forms
-* Customs declaration and commercial invoicing
-* Address verification
-* Signature and adult signature confirmation
-* Consolidator support including:
-	* DHL eCommerce
-	* UPS Mail Innovations
-	* FedEx Smartpost
-* Additional services: cash-on-delivery, certified mail, delivery confirmation, and more.
+
+
+
+
+
+
+
+

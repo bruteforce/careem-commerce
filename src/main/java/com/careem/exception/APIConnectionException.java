@@ -1,6 +1,6 @@
 package com.careem.exception;
 
-public class APIConnectionException extends ShippoException {
+public class APIConnectionException extends CommerceException {
 
 	private static final long serialVersionUID = 1L;
 

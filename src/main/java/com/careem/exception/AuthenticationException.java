@@ -1,6 +1,6 @@
 package com.careem.exception;
 
-public class AuthenticationException extends ShippoException {
+public class AuthenticationException extends CommerceException {
 
     public AuthenticationException(String message) {
         super(message);

@@ -4,23 +4,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.careem.exception.ShippoException;
+import com.careem.exception.CommerceException;
 import com.careem.model.Rate;
 import com.careem.model.Shipment;
 import com.careem.model.Transaction;
 
 public class Example {
 
-	public static void main(String[] args) throws ShippoException {
+	public static void main(String[] args) throws CommerceException {
 		
-		// replace with your Shippo Token
-		// don't have one? get more info here (https://goshippo.com/docs/#overview)
-		Shippo.setApiKey("<API-KEY>");
+		Constants.setApiKey("<API-KEY>");
 
-		// Optional defaults to false
-		//Shippo.setDEBUG(true);
 
-		// to address
 		Map<String, Object> toAddressMap = new HashMap<String, Object>();
 		toAddressMap.put("object_purpose", "PURCHASE");
 		toAddressMap.put("name", "Mr Hippo");
@@ -33,7 +28,6 @@ public class Example {
 		toAddressMap.put("phone", "+1 555 341 9393");
 		toAddressMap.put("email", "mrhippo@goshipppo.com");
 
-		// from address
 		Map<String, Object> fromAddressMap = new HashMap<String, Object>();
 		fromAddressMap.put("object_purpose", "PURCHASE");
 		fromAddressMap.put("name", "Ms Hippo");
@@ -65,8 +59,6 @@ public class Example {
 
 		Shipment shipment = Shipment.create(shipmentMap);
 
-		// select shipping rate according to your business logic
-		// we select the first rate in this example
 		List<Rate> rates = shipment.getRatesList();
 		Rate rate = rates.get(0);
 

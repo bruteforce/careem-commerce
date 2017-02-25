@@ -9,7 +9,6 @@ public abstract class ShippoColllectionAPIResource<T> extends APIResource {
     Integer totalCount;
     Boolean hasMore;
     String url;
-    /** 3/2014: Legacy (from before newstyle pagination API) */
     Integer count;
 
     public List<T> getData() {
@@ -44,12 +43,10 @@ public abstract class ShippoColllectionAPIResource<T> extends APIResource {
         this.url = url;
     }
 
-    /** 3/2014: Legacy (from before newstyle pagination API) */
     public Integer getCount() {
         return count;
     }
 
-    /** 3/2014: Legacy (from before newstyle pagination API) */
     public void setCount(Integer count) {
         this.count = count;
     }
