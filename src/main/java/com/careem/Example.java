@@ -12,10 +12,8 @@ import com.careem.model.Transaction;
 public class Example {
 
 	public static void main(String[] args) throws CommerceException {
-		
+
 		Constants.setApiKey("<API-KEY>");
-
-
 		Map<String, Object> toAddressMap = new HashMap<String, Object>();
 		toAddressMap.put("object_purpose", "PURCHASE");
 		toAddressMap.put("name", "Mr A");

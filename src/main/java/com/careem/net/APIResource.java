@@ -428,7 +428,7 @@ public abstract class APIResource extends ShippoObject {
 		try {
 			query = createQuery(params, method);
 		} catch (UnsupportedEncodingException e) {
-			 throw new InvalidRequestException("Unable to encode parameters to");
+			 throw new InvalidRequestException("Unable to encode parameters to", null, null);
 		}
 		ShippoResponse response = makeURLConnectionRequest(method, url, query,
 				apiKey);
