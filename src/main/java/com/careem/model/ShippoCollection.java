@@ -6,7 +6,7 @@ public abstract class ShippoCollection<T> extends ShippoObject {
     List<T> results;
     Boolean hasMore;
     String url;
-    /** 3/2014: Legacy (from before newstyle pagination API) */
+
     Integer count;
 
     public List<T> getData() {

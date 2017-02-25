@@ -6,10 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="careem-java-client" />
         <module name="shippo-java-client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="careem-java-client" target="1.5" />
       <module name="shippo-java-client" target="1.5" />
     </bytecodeTargetLevel>
   </component>
