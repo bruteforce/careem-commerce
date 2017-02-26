@@ -1,6 +1,9 @@
 # Java Doc
 [Code Doc](https://bruteforce.github.io/)
 
+# [High-Level Work Flow Diagram]
+(https://github.com/bruteforce/bruteforce.github.io/blob/master/high-level.png?raw=true)
+
 
 #Objects of the system with End Points
 
