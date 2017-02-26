@@ -30,16 +30,22 @@
     Address objects are used for creating Shipments, obtaining Rates and printing Labels
 
     ##End Points:
+
+
     ###Create a new address
+
     POST /address/
 
     ###Retrieve an existing address by object id.
+
     GET /address/<address_object_id>
 
     ###Validate an existing address by object id.
+
     GET /address/<address_object_id>/validate
 
     #List all addresses
+
     GET /addresses/
 
 
@@ -67,10 +73,15 @@
    ##End Points:
 
    ### Create a new parcel
+
    POST /parcels/
+
    ###Retrieve an existing parcel by object id.
+
    GET /parcels/<PARCEL OBJECT ID>
+
    L###ist all parcels
+
    GET /parcels/
 
 
@@ -140,12 +151,15 @@
    ##End Point -
 
    ###Creates a new shipment object.
+
    POST /shipments/
 
    ###Retrieve an existing shipment
+
    GET /shipments/<SHIPMENT OBJECT ID>
 
    ###List all shipment objects.
+
    GET /shipments/
 
 
@@ -189,9 +203,11 @@
    ##End Points
 
    ### Get shipping rates
+
    GET /shipments/<SHIPMENT OBJECT ID>/rates/[<CURRENCY CODE>/]
 
    ### Retrieve an existing rate by object id.
+
    GET /rates/<RATE OBJECT ID>
 
 
@@ -224,9 +240,11 @@
     ##End Points:
 
     ### Create a transaction based on a rate object
+
     POST /transactions/
 
     ### Retrieve an existing transaction by object id.
+
     GET /transactions/<TRANSACTION OBJECT ID>
 
 
@@ -256,12 +274,15 @@
    ## END POINTS
 
    ### Creates a new Customs Item object.
+
    POST /customs/items/
 
    ### Retrieve an existing Customs Item by object id.
+
    GET /customs/items/<CUSTOMS ITEM OBJECT ID>
 
    ### List all custom-items objects.
+
    GET /customs/items/
 
 ##7. Carrier Accounts
@@ -284,15 +305,19 @@
    ##END POINTS
 
    ###Creates a new carrier account object.
+
    POST /carrier_accounts/
 
    ###Retrieve an existing carrier account by object id.
+
    GET /carrier_accounts/<CARRIER ACCOUNT OBJECT ID>
 
    ###List all carrier accounts
+
    GET /carrier_accounts/
 
    ###Update an existing carrier account
+
    /carrier_accounts/<CARRIER ACCOUNT OBJECT ID>
 
 ##8. Tracking Status
@@ -365,9 +390,11 @@
   }
 
   ### Request the tracking status of a shipment by sending a GET request.
+
    GET /tracks/<CARRIER>/<TRACKING NUMBER>/
 
   ### Register a tracking webhook
+
    POST /tracks/
 
 
