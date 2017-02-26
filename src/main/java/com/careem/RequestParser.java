@@ -1,8 +1,5 @@
 package com.careem;
 
-import com.careem.model.Address;
-import com.careem.model.Shipment;
-import com.careem.model.Transaction;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import spark.Request;
@@ -89,6 +86,7 @@ public class RequestParser {
     }
 
     public static Map<String,Object> parseTransactionFromRequest(Request req) {
+        JsonObject transactionObject = new Gson().fromJson(req.body(), JsonObject.class);
         Map<String, Object> transParams = new HashMap<String, Object>();
         //transParams.put("rate", rate.getObjectId());
         transParams.put("async", false);

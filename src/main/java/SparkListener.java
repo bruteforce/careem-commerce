@@ -42,7 +42,7 @@ public class SparkListener {
             return CarrierAccount.create(RequestParser.parseCarrierFromRequest(req));
         });
 
-        get("/carrier", (req, res) -> {
+        get("/carrier/:object_id", (req, res) -> {
             return CarrierAccount.create(RequestParser.parseCarrierFromRequest(req));
         });
     }

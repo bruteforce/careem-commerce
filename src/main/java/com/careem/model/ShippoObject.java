@@ -17,10 +17,6 @@ public abstract class ShippoObject {
 
 		@Override public String toString() {
 			return String.format(
-				"<%s@%s id=%s> JSON: %s",
-				this.getClass().getName(),
-				System.identityHashCode(this),
-				this.getIdString(),
 				PRETTY_PRINT_GSON.toJson(this));
 		}
     private Object getIdString() {
