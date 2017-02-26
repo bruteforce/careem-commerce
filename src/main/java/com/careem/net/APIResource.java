@@ -5,20 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.URLStreamHandler;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
+import com.careem.lib.InMemoryStore;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,7 +48,7 @@ public abstract class APIResource extends ShippoObject {
 	}
 
 	protected static String singleClassURL(Class<?> clazz) {
-		return String.format("%s/v1/%s", Constants.getApiBase(), className(clazz));
+		return String.format("v1/%s", className(clazz));
 	}
 
 	protected static String classURL(Class<?> clazz) {
@@ -78,7 +73,6 @@ public abstract class APIResource extends ShippoObject {
 
 	public static final String CHARSET = "UTF-8";
 
-	private static final String DNS_CACHE_TTL_PROPERTY_NAME = "networkaddress.cache.ttl";
 
 
 	private static final String CUSTOM_URL_STREAM_HANDLER_PROPERTY_NAME = "com.careem.net.customURLStreamHandler";
@@ -138,7 +132,6 @@ public abstract class APIResource extends ShippoObject {
 				CUSTOM_URL_STREAM_HANDLER_PROPERTY_NAME, null);
 		if (customURLStreamHandlerClassName != null) {
 			try {
-				@SuppressWarnings("unchecked")
 				Class<URLStreamHandler> clazz = (Class<URLStreamHandler>) Class
 						.forName(customURLStreamHandlerClassName);
 				Constructor<URLStreamHandler> constructor = clazz
@@ -168,38 +161,6 @@ public abstract class APIResource extends ShippoObject {
 				"Invalid server certificate. You tried to connect to a server that has a revoked SSL certificate, which means we cannot securely send data to that server. Please email support@gocareem.com if you need help connecting to the correct API server.");
 	}
 
-	private static void checkSSLCert(java.net.HttpURLConnection hconn)
-			throws IOException, APIConnectionException {
-		 if (!Constants.getVerifySSL() &&
-		 !hconn.getURL().getHost().equals("api.careem.com")) {
-		 return;
-		 }
-
-		 javax.net.ssl.HttpsURLConnection conn =
-		 (javax.net.ssl.HttpsURLConnection) hconn;
-		 conn.connect();
-
-		 Certificate[] certs = conn.getServerCertificates();
-
-		 try {
-		 MessageDigest md = MessageDigest.getInstance("SHA-1");
-
-		 byte[] der = certs[0].getEncoded();
-		 md.update(der);
-		 byte[] digest = md.digest();
-
-		 byte[] revokedCertDigest = {};
-
-		 if (Arrays.equals(digest, revokedCertDigest)) {
-		 throwInvalidCertificateException();
-		 }
-
-		 } catch (NoSuchAlgorithmException e) {
-		 throw new RuntimeException(e);
-		 } catch (CertificateEncodingException e) {
-		 throwInvalidCertificateException();
-		 }
-	}
 
 	private static String formatURL(String url, String query) {
 		if (query == null) {
@@ -213,14 +174,10 @@ public abstract class APIResource extends ShippoObject {
 	private static java.net.HttpURLConnection createGetConnection(String url,
 			String query, String apiKey) throws IOException,
 			APIConnectionException {
-		if (Constants.isDEBUG()) {
-			System.out.println("GET URL: " + url);
-		}
 		String getURL = formatURL(url, query);
 		java.net.HttpURLConnection conn = createShippoConnection(getURL, apiKey);
 		conn.setRequestMethod("GET");
 
-		checkSSLCert(conn);
 
 		return conn;
 	}
@@ -228,16 +185,11 @@ public abstract class APIResource extends ShippoObject {
 	private static java.net.HttpURLConnection createPostPutConnection(String url,
 			String query, RequestMethod method, String apiKey) throws IOException,
 			APIConnectionException {
-		if (Constants.isDEBUG()) {
-			System.out.println("POST URL: " + url);
-		}
-
 		java.net.HttpURLConnection conn = createShippoConnection(url, apiKey);
 		conn.setDoOutput(true);
 		conn.setRequestMethod(method.toString());
 		conn.setRequestProperty("Content-Type", "application/json");
 
-		checkSSLCert(conn);
 
 		OutputStream output = null;
 		try {
@@ -264,7 +216,6 @@ public abstract class APIResource extends ShippoObject {
 		conn.setRequestMethod("PUT");
 		conn.setRequestProperty("Content-Type", "application/json");
 
-		checkSSLCert(conn);
 
 		OutputStream output = null;
 		try {
@@ -338,12 +289,6 @@ public abstract class APIResource extends ShippoObject {
 			String apiKey) throws APIConnectionException {
 		java.net.HttpURLConnection conn = null;
 
-		if (Constants.isDEBUG()) {
-			System.out.println("URL: " + url);
-			System.out.println("Query: " + query);
-			System.out.println("API Key: " + apiKey);
-		}
-
 		try {
 			if(method.equals(RequestMethod.GET)){
 				conn = createGetConnection(url, query, apiKey);
@@ -384,62 +329,38 @@ public abstract class APIResource extends ShippoObject {
 			String url, Map<String, Object> params, Class<T> clazz,
 			String apiKey) throws AuthenticationException,
 			InvalidRequestException, APIConnectionException, APIException {
-		String originalDNSCacheTTL = null;
-		Boolean allowedToSetTTL = true;
-		try {
-			originalDNSCacheTTL = java.security.Security
-					.getProperty(DNS_CACHE_TTL_PROPERTY_NAME);
-			java.security.Security
-					.setProperty(DNS_CACHE_TTL_PROPERTY_NAME, "0");
-		} catch (SecurityException se) {
-			allowedToSetTTL = false;
-		}
-
-		try {
 			return _request(method, url, params, clazz, apiKey);
-		} finally {
-			if (allowedToSetTTL) {
-				if (originalDNSCacheTTL == null) {
-
-					java.security.Security.setProperty(
-							DNS_CACHE_TTL_PROPERTY_NAME, "-1");
-				} else {
-					java.security.Security.setProperty(
-							DNS_CACHE_TTL_PROPERTY_NAME, originalDNSCacheTTL);
-				}
-			}
-		}
 	}
 
 	protected static <T> T _request(APIResource.RequestMethod method,
 			String url, Map<String, Object> params, Class<T> clazz,
 			String apiKey) throws AuthenticationException,
 			InvalidRequestException, APIConnectionException, APIException {
-		if ((Constants.apiKey == null || Constants.apiKey.length() == 0)
-				&& (apiKey == null || apiKey.length() == 0)) {
-			throw new AuthenticationException("");
-		}
 
-		if (apiKey == null) {
-			apiKey = Constants.apiKey;
-		}
+		if(Constants.inMemory()){
+			return GSON.fromJson(InMemoryStore.processRequest(method.toString(), url, params), clazz);
+		}else {
+			if (apiKey == null) {
+				apiKey = Constants.apiKey;
+			}
 
-		String query;
-		try {
-			query = createQuery(params, method);
-		} catch (UnsupportedEncodingException e) {
-			 throw new InvalidRequestException("Unable to encode parameters to", null, null);
-		}
-		ShippoResponse response = makeURLConnectionRequest(method, url, query,
-				apiKey);
+			String query;
+			try {
+				query = createQuery(params, method);
+			} catch (UnsupportedEncodingException e) {
+				throw new InvalidRequestException("Unable to encode parameters to", null, null);
+			}
+			ShippoResponse response = makeURLConnectionRequest(method, url, query,
+					apiKey);
 
-		int rCode = response.responseCode;
-		String rBody = response.responseBody;
+			int rCode = response.responseCode;
+			String rBody = response.responseBody;
 
-		if (rCode < 200 || rCode >= 300) {
-			handleAPIError(rBody, rCode);
+			if (rCode < 200 || rCode >= 300) {
+				handleAPIError(rBody, rCode);
+			}
+			return GSON.fromJson(rBody, clazz);
 		}
-		return GSON.fromJson(rBody, clazz);
 	}
 
 	private static void handleAPIError(String rBody, int rCode)
@@ -464,16 +385,16 @@ public abstract class APIResource extends ShippoObject {
 	
     private static String createGETQuery(Map<String, Object> params) throws UnsupportedEncodingException,
     InvalidRequestException {
-Map<String, String> flatParams = flattenParams(params);
-StringBuilder queryStringBuffer = new StringBuilder();
-for (Map.Entry<String, String> entry : flatParams.entrySet()) {
-    if (queryStringBuffer.length() > 0) {
-        queryStringBuffer.append("&");
-    }
-    queryStringBuffer.append(urlEncodePair(entry.getKey(), entry.getValue()));
-}
-return queryStringBuffer.toString();
-}
+		Map<String, String> flatParams = flattenParams(params);
+		StringBuilder queryStringBuffer = new StringBuilder();
+		for (Map.Entry<String, String> entry : flatParams.entrySet()) {
+			if (queryStringBuffer.length() > 0) {
+				queryStringBuffer.append("&");
+			}
+			queryStringBuffer.append(urlEncodePair(entry.getKey(), entry.getValue()));
+		}
+		return queryStringBuffer.toString();
+	}
 
     private static String createQuery(Map<String, Object> params, APIResource.RequestMethod method) throws UnsupportedEncodingException,
     InvalidRequestException {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import com.careem.Constants;
 import com.careem.exception.*;
+import com.careem.lib.JedisClient;
 import com.careem.net.APIResource;
 
 public class Shipment extends APIResource {

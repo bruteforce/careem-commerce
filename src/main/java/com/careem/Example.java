@@ -5,13 +5,19 @@ import java.util.List;
 import java.util.Map;
 
 import com.careem.exception.CommerceException;
-import com.careem.model.Rate;
-import com.careem.model.Shipment;
-import com.careem.model.Transaction;
+import com.careem.model.*;
 
 public class Example {
 
 	public static void main(String[] args) throws CommerceException {
+		//Test address retrieval
+		Address address = Address.retrieve("fcd9c72b564d4bfa8c03299ed6545132");
+
+		//Test parcel retrieval
+		Parcel parcel = Parcel.retrieve("fcd9c72b564d4bfa8c03299ed6545132");
+
+
+
 
 		Constants.setApiKey("<API-KEY>");
 		Map<String, Object> toAddressMap = new HashMap<String, Object>();

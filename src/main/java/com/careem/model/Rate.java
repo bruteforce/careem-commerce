@@ -2,16 +2,12 @@ package com.careem.model;
 
 import java.util.Map;
 
-import com.careem.exception.APIConnectionException;
-import com.careem.exception.APIException;
-import com.careem.exception.AuthenticationException;
-import com.careem.exception.InvalidRequestException;
+import com.careem.exception.*;
 import com.careem.net.APIResource;
 
 public class Rate extends APIResource {
 	String objectState;
 	String objectStatus;
-	String objectPurpose;
 	String objectId;
 	String objectOwner;
 	Object objectCreated;
@@ -72,14 +68,6 @@ public class Rate extends APIResource {
 
 	public void setObjectStatus(String objectStatus) {
 		this.objectStatus = objectStatus;
-	}
-
-	public String getObjectPurpose() {
-		return objectPurpose;
-	}
-
-	public void setObject_purpose(String objectPurpose) {
-		this.objectPurpose = objectPurpose;
 	}
 
 	public String getObjectId() {
