@@ -94,4 +94,15 @@ public class RequestParser {
         transParams.put("async", false);
         return transParams;
     }
+
+
+    public static Map<String,Object> parseCarrierFromRequest(Request req) {
+        JsonObject carrierObject = new Gson().fromJson(req.body(), JsonObject.class);
+        Map<String, Object> carrierParams = new HashMap<String, Object>();
+        carrierParams.put("carrier", carrierObject.get("carrier"));
+        carrierParams.put("account_id", carrierObject.get("account_id"));
+        carrierParams.put("test", carrierObject.get("test"));
+        return carrierParams;
+
+    }
 }

@@ -1,6 +1,9 @@
-Objects of the system
+#
 
-1. Address
+
+#Objects of the system with End Points
+
+##1. Address
     {
         "object_state": "VALID",
         "object_purpose": "PURCHASE",
@@ -25,21 +28,22 @@ Objects of the system
         "messages": []
     }
     Address objects are used for creating Shipments, obtaining Rates and printing Labels
-    End Points:
-    Create a new address
+
+    ##End Points:
+    ###Create a new address
     POST /address/
 
-    Retrieve an existing address by object id.
+    ###Retrieve an existing address by object id.
     GET /address/<address_object_id>
 
-    Validate an existing address by object id.
+    ###Validate an existing address by object id.
     GET /address/<address_object_id>/validate
 
-    List all addresses
+    #List all addresses
     GET /addresses/
 
 
-2. Parcel
+##2. Parcel
     {
        "object_state": "VALID",
        "object_created": "2013-12-11T19:38:09.729Z",
@@ -60,17 +64,17 @@ Objects of the system
    Parcel objects are used for creating Shipments, obtaining Rates and printing Labels.
    Parcels are created with their basic dimensions and their weight.
 
-   End Points:
+   ##End Points:
 
-   Create a new parcel
+   ### Create a new parcel
    POST /parcels/
-   Retrieve an existing parcel by object id.
+   ###Retrieve an existing parcel by object id.
    GET /parcels/<PARCEL OBJECT ID>
-   List all parcels
+   L###ist all parcels
    GET /parcels/
 
 
-3. Shipment
+##3. Shipment
    {
        "object_state": "VALID",
        "object_status": "SUCCESS",
@@ -132,22 +136,23 @@ Objects of the system
 
    A shipment is made up of "to" and "from" addresses and the parcel to be shipped.
    From shipment object we can retrieve shipping rates and purchase a shipping label.
-   End Point -
 
-   Creates a new shipment object.
+   ##End Point -
+
+   ###Creates a new shipment object.
    POST /shipments/
 
-   Retrieve an existing shipment
+   ###Retrieve an existing shipment
    GET /shipments/<SHIPMENT OBJECT ID>
 
-   List all shipment objects.
+   ###List all shipment objects.
    GET /shipments/
 
 
 
 
 
-4. Rate
+##4. Rate
     {
         "object_state":"VALID",
         "object_purpose":"PURCHASE",
@@ -181,17 +186,17 @@ Objects of the system
    A rate is an available service of a shipping provider for a given shipment,
    including the price and transit time.
 
-   End Points
+   ##End Points
 
-    Get shipping rates
+   ### Get shipping rates
    GET /shipments/<SHIPMENT OBJECT ID>/rates/[<CURRENCY CODE>/]
 
-   Retrieve an existing rate by object id.
+   ### Retrieve an existing rate by object id.
    GET /rates/<RATE OBJECT ID>
 
 
 
-5. Transaction (shipping labels)
+##5. Transaction (shipping labels)
     {
        "object_state":"VALID",
        "object_status":"SUCCESS",
@@ -216,19 +221,19 @@ Objects of the system
 
     A transaction is the purchase of a shipping label from a shipping provider for a specific service.
 
-    End Points:
+    ##End Points:
 
-    Create a transaction based on a rate object
+    ### Create a transaction based on a rate object
     POST /transactions/
 
-    Retrieve an existing transaction by object id.
+    ### Retrieve an existing transaction by object id.
     GET /transactions/<TRANSACTION OBJECT ID>
 
 
 
 
 
-6. Customs Items
+##6. Customs Items
     {
         "object_created": "2014-02-24T22:05:55.014",
         "object_updated": "2014-02-24T22:05:55.016",
@@ -248,17 +253,18 @@ Objects of the system
     }
    Customs items are distinct items in your shipment parcel.
 
-   END POINTS
-   Creates a new Customs Item object.
+   ## END POINTS
+
+   ### Creates a new Customs Item object.
    POST /customs/items/
 
-   Retrieve an existing Customs Item by object id.
+   ### Retrieve an existing Customs Item by object id.
    GET /customs/items/<CUSTOMS ITEM OBJECT ID>
 
-   List all custom-items objects.
+   ### List all custom-items objects.
    GET /customs/items/
 
-7. Carrier Accounts
+##7. Carrier Accounts
     {
         "object_id":"b741b99f95e841639b54272834bc478c",
         "object_owner": "careemtle@gocareem.com",
@@ -275,21 +281,21 @@ Objects of the system
    purchase labels from a shipping provider.
 
 
-   END POINTS
+   ##END POINTS
 
-   Creates a new carrier account object.
+   ###Creates a new carrier account object.
    POST /carrier_accounts/
 
-   Retrieve an existing carrier account by object id.
+   ###Retrieve an existing carrier account by object id.
    GET /carrier_accounts/<CARRIER ACCOUNT OBJECT ID>
 
-   List all carrier accounts
+   ###List all carrier accounts
    GET /carrier_accounts/
 
-   Update an existing carrier account
+   ###Update an existing carrier account
    /carrier_accounts/<CARRIER ACCOUNT OBJECT ID>
 
-8. Tracking Status
+##8. Tracking Status
 
   {
     "carrier": "usps",
@@ -358,10 +364,10 @@ Objects of the system
     ]
   }
 
-  Request the tracking status of a shipment by sending a GET request.
+  ### Request the tracking status of a shipment by sending a GET request.
    GET /tracks/<CARRIER>/<TRACKING NUMBER>/
 
-  Register a tracking webhook
+  ### Register a tracking webhook
    POST /tracks/
 
 

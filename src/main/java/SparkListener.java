@@ -1,15 +1,5 @@
 import com.careem.RequestParser;
-import com.careem.model.Address;
-import com.careem.model.Parcel;
-import com.careem.model.Shipment;
-import com.careem.model.Transaction;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-
-import java.util.HashMap;
-import java.util.Map;
+import com.careem.model.*;
 
 import static spark.Spark.*;
 public class SparkListener {
@@ -46,6 +36,14 @@ public class SparkListener {
 
         post("/transaction", (req, res) -> {
             return Transaction.create(RequestParser.parseTransactionFromRequest(req));
+        });
+
+        post("/carrier", (req, res) -> {
+            return CarrierAccount.create(RequestParser.parseCarrierFromRequest(req));
+        });
+
+        get("/carrier", (req, res) -> {
+            return CarrierAccount.create(RequestParser.parseCarrierFromRequest(req));
         });
     }
 }
